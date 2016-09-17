@@ -6,18 +6,21 @@ from fagungis.tasks import *
 
 
 @task
-def example():
+def lytyfy_rest():
     #  name of your project - no spaces, no special chars
-    env.project = 'example_production'
+    env.project = 'lytyfy_rest'
     #  hg repository of your project
-    env.repository = 'https://bitbucket.org/DNX/example'
+    env.repository = 'https://gitlab.com/deviab/lytyfy_rest.git'
+    #branch name
+    env.branch = 'develop'
     #  type of repository (git or hg)
-    env.repository_type = 'hg'
+    env.repository_type = 'git'
     #  hosts to deploy your project, users must be sudoers
-    env.hosts = ['root@192.168.1.1', ]
+    env.hosts = ['ubuntu@54.169.235.117', ]
     # additional packages to be installed on the server
     env.additional_packages = [
-        'mercurial',
+        "libmysqlclient-dev",
+        "git"
     ]
     #  system user, owner of the processes and code on your server
     #  the user and it's home dir will be created if not present
@@ -45,7 +48,7 @@ def example():
     env.django_static_url = '/site_media/static/'
     env.django_static_root = env.code_root
     #  do you use south in your django project?
-    env.south_used = False
+    env.south_used = True
     #  virtualenv root
     env.virtenv = join(env.django_user_home, 'envs', env.project)
     #  some virtualenv options, must have at least one
@@ -53,7 +56,7 @@ def example():
     #  location of your pip requirements file
     #  http://www.pip-installer.org/en/latest/requirements.html#the-requirements-file-format
     #  set it to None to not use
-    env.requirements_file = join(env.code_root, 'requirements.txt')
+    env.requirements_file = None
     #  always ask user for confirmation when run any tasks
     env.ask_confirmation = True
 
@@ -64,17 +67,17 @@ def example():
     env.rungunicorn_script = '%(django_user_home)s/scripts/rungunicorn_%(project)s.sh' % env
     env.gunicorn_workers = 2
     env.gunicorn_worker_class = "eventlet"
-    env.gunicorn_loglevel = "info"
+    env.gunicorn_loglevel = "debug"
     ### END gunicorn settings ###
 
     ### START nginx settings ###
-    env.nginx_server_name = 'example.com'  # Only domain name, without 'www' or 'http://'
+    env.nginx_server_name = 'dev-api.lytyfy.org'  # Only domain name, without 'www' or 'http://'
     env.nginx_conf_file = '%(django_user_home)s/configs/nginx/%(project)s.conf' % env
     env.nginx_client_max_body_size = 10  # Maximum accepted body size of client request, in MB
     env.nginx_htdocs = '%(django_user_home)s/htdocs' % env
     # will configure nginx with ssl on, your certificate must be installed
     # more info here: http://wiki.nginx.org/HttpSslModule
-    env.nginx_https = False
+    env.nginx_https = True
     ### END nginx settings ###
 
     ### START supervisor settings ###

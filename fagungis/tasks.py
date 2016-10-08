@@ -72,7 +72,7 @@ def deploy():
             abort("Aborting at user request.")
     puts(green_bg('Start deploy...'))
     start_time = datetime.now()
-
+    _git_checkout()
     if env.repository_type == 'hg':
         hg_pull()
     else:
@@ -121,6 +121,11 @@ def hg_pull():
 def git_pull():
     with cd(env.code_root):
         sudo('git pull -u origin '+env.branch)
+
+@task
+def _git_checkout():
+    with cd(env.code_root):
+        sudo('git checkout -u '+env.branch)
 
 @task
 def test_configuration(verbose=True):

@@ -72,10 +72,10 @@ def deploy():
             abort("Aborting at user request.")
     puts(green_bg('Start deploy...'))
     start_time = datetime.now()
-    _git_checkout()
     if env.repository_type == 'hg':
         hg_pull()
     else:
+        git_checkout()
         git_pull()
     _install_requirements()
     _prepare_django_project()
@@ -123,9 +123,15 @@ def git_pull():
         sudo('git pull -u origin '+env.branch)
 
 @task
-def _git_checkout():
+def git_checkout():
     with cd(env.code_root):
-        sudo('git checkout -u '+env.branch)
+        sudo('git add . && git stash && git stash clear ')
+        sudo('git checkout '+env.branch)
+
+@task
+def git_status():
+    with cd(env.code_root):
+        sudo('git status')
 
 @task
 def test_configuration(verbose=True):

@@ -125,8 +125,7 @@ def git_pull():
 @task
 def git_checkout():
     with cd(env.code_root):
-        sudo('git add . && git stash && git stash clear ')
-        sudo('git checkout '+env.branch)
+        sudo('git add . && git stash && git stash clear && git fetch && git checkout '+env.branch)
 
 @task
 def git_status():
